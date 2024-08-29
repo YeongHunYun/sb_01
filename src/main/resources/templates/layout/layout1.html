@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Layout Page</title>
+</head>
+<body>
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4J_JgN6CBP0GMCIQpEo6RT-_YfQ1LiKXGGw&s" alt="스위스">
+<div>
+    <h3>Sample Layout Header</h3>
+</div>
+<div layout:fragment="content">
+    <p>Page content goes here</p>
+</div>
+<div>
+    <h3>Sample Layout Footer</h3>
+</div>
+<th:block layout:fragment="script">
+
+
+</th:block>
+
+</body>
+</html>

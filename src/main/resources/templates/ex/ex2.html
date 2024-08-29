@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:text="${list}"></div>
+<div th:text="${map}"></div>
+<div th:text="${dto}"></div>
+
+<script th:inline="javascript">
+
+  //타임리프에서는 html영역뿐 아니라 javascript영역에서도
+  //변수에 값을 저장할 수 있다.
+  const list = [[${list}]]
+  const map = [[${map}]]
+  const dto = [[${dto}]]
+
+  console.log(list);
+  console.log(map);
+  console.log(dto);
+
+</script>
+
+</body>
+</html>
