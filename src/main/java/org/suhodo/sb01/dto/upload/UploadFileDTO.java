@@ -1,4 +1,4 @@
-package org.suhodo.sb01.dto;
+package org.suhodo.sb01.dto.upload;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
