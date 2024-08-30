@@ -2,10 +2,14 @@ package org.suhodo.sb01.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.suhodo.sb01.domain.Board;
 import org.suhodo.sb01.repository.search.BoardSearch;
+
+import javax.persistence.Entity;
+import java.util.Optional;
 
 /* JpaRepository<Board, Long>를 상속받은 interface를 선언하면
 자동으로 jpa에 의해 Bean으로 생성되어 Spring의 관리를 받게 된다.
@@ -36,4 +40,9 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardSearch
     // 5) QueryDsl
     //   조인등 복잡한 연산을 할 때 메서드 호출방식으로 구성하게 하는 것
     //   프로그래밍(QueryDsl) -> JPQL -> NativeQuery -> DBMS에 전달
+
+    @EntityGraph(attributePaths={"imageSet"})
+    @Query("select b from Board b where b.bno = :bno")
+    Optional<Board> findByIdWithImages(Long bno);
+
 }
