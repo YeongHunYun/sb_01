@@ -204,11 +204,6 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     }
 
     @Override
-    public Page<BoardListAllDTO> serachWithAll(String[] types, String keyword, Pageable pageable) {
-        return null;
-    }
-
-    @Override
     public Page<BoardListAllDTO> searchWithAll(String[] types, String keyword, Pageable pageable) {
         QBoard board = QBoard.board;
         QReply reply = QReply.reply;
@@ -217,6 +212,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
            LEFT JOIN reply ON reply.bno=board.bno
            board(게시글)는 종속된 reply가 없어도 모두 가져온다.
         * */
+
         JPQLQuery<Board> boardJPQLQuery = from(board);
         boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board));
 
@@ -342,3 +338,16 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 //        return null;
 //    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

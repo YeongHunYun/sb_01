@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequiredArgsConstructor
 @Transactional
-public class BoardServiceImpl implements BoardService {
+public class BoardServiceImpl implements BoardService{
 
     private final ModelMapper modelMapper;
 
@@ -38,7 +38,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Long register(BoardDTO boardDTO) {
 
-        Board board = modelMapper.map(boardDTO, Board.class);
+//        Board board = modelMapper.map(boardDTO, Board.class);
+        Board board = dtoToEntity(boardDTO);
 
         Long bno = boardRepository.save(board).getBno();
 
@@ -51,7 +52,8 @@ public class BoardServiceImpl implements BoardService {
 
         Board board = result.orElseThrow();
 
-        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+//        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+        BoardDTO boardDTO = entityToDto(board);
 
         return boardDTO;
     }
@@ -81,14 +83,14 @@ public class BoardServiceImpl implements BoardService {
         Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
 
         List<BoardDTO> dtoList = result.getContent().stream()
-                .map(board -> modelMapper.map(board, BoardDTO.class))
+                .map(board->modelMapper.map(board, BoardDTO.class))
                 .collect(Collectors.toList());
 
 
         return PageResponseDTO.<BoardDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
-                .total((int) result.getTotalElements())
+                .total((int)result.getTotalElements())
                 .build();
     }
 
@@ -103,12 +105,23 @@ public class BoardServiceImpl implements BoardService {
         return PageResponseDTO.<BoardListReplyCountDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(result.getContent())
-                .total((int) result.getTotalElements())
+                .total((int)result.getTotalElements())
                 .build();
     }
 
     @Override
-    public PageResponseDTO<BoardListAllDTO> search(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListAllDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int))
+
         return null;
     }
 }
