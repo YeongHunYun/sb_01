@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import org.suhodo.sb01.domain.Board;
+import org.suhodo.sb01.dto.BoardListAllDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +91,7 @@ public class BoardRepositoryTests {
 
         List<Board> todoList = result.getContent();
 
-        todoList.forEach(board -> log.info(board));
+        todoList.forEach(log::info);
     }
 
     @Test
@@ -106,7 +107,7 @@ public class BoardRepositoryTests {
 
         List<Board> todoList = result.getContent();
 
-        todoList.forEach(board -> log.info(board));
+        todoList.forEach(log::info);
     }
 
     @Test
@@ -135,7 +136,7 @@ public class BoardRepositoryTests {
         log.info(result.getNumber());
         log.info(result.hasPrevious() + " : " + result.hasNext());
 
-        result.getContent().forEach(board -> log.info(board));
+        result.getContent().forEach(log::info);
     }
 
     @Test
@@ -201,12 +202,15 @@ public class BoardRepositoryTests {
         for(int i=0;i<=100;i++){
             Board board = Board.builder()
                     .title("Title.."+i)
+
                     .content("Content..."+i)
+
                     .writer("writer..."+i)
                     .build();
 
             for(int j=0;j<3;j++){
                 if(i%5 ==0)
+
                     continue;
 
                 board.addImage(UUID.randomUUID().toString(), i+ "file" + j  + ".jpg");
@@ -214,12 +218,23 @@ public class BoardRepositoryTests {
             boardRepository.save(board);
         }
     }
+//
+//    @Transactional
+//    @Test
+//    public void testSearchImageReplyCount() {
+//
+//        Pageable pageable = PageRequest.of(1, 10, Sort.by("bno").descending());
+//        boardRepository.serachWithAll(null, null, pageable);
+//    }
 
     @Transactional
     @Test
-    public void testSearchImageReplyCount() {
+    public void testSearchImageReplyCount(){
         Pageable pageable = PageRequest.of(1, 10, Sort.by("bno").descending());
-        boardRepository.serachWithAll(null, null, pageable);
-    }
+        Page<BoardListAllDTO> result = boardRepository.serachWithAll(null, null, pageable);
+        log.info("-------------------");
+        log.info(result.getTotalElements());
 
+        result.getContent().forEach(boardListAllDTO -> log.info(boardListAllDTO));
+    }
 }

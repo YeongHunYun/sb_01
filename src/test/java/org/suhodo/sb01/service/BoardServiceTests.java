@@ -21,6 +21,7 @@ public class BoardServiceTests {
 
         BoardDTO boardDTO = BoardDTO.builder()
                 .title("Sample Title...")
+
                 .content("Sample Content...")
                 .writer("user00")
                 .build();
@@ -51,7 +52,7 @@ public class BoardServiceTests {
 
     @Test
     public void testDelete() {
-        boardService.remove(100L);
+        boardService.remove(1L);
     }
 
     @Test

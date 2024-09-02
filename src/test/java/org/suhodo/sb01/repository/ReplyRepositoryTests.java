@@ -24,11 +24,15 @@ public class ReplyRepositoryTests {
         Long bno = 201L;
 
         Board board = Board.builder()
+
                 .bno(bno)
+
                 .build();
 
         // bno가 100인 게시글의 자식으로 댓글을 추가
+
         Reply reply = Reply.builder()
+
                 .board(board)
                 .replyText("댓글......")
                 .replyer("replyer1")

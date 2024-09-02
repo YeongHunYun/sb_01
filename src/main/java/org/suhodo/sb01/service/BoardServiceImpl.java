@@ -7,10 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.suhodo.sb01.domain.Board;
-import org.suhodo.sb01.dto.BoardDTO;
-import org.suhodo.sb01.dto.BoardListReplyCountDTO;
-import org.suhodo.sb01.dto.PageRequestDTO;
-import org.suhodo.sb01.dto.PageResponseDTO;
+import org.suhodo.sb01.dto.*;
 import org.suhodo.sb01.repository.BoardRepository;
 
 import javax.transaction.Transactional;
@@ -108,6 +105,11 @@ public class BoardServiceImpl implements BoardService {
                 .dtoList(result.getContent())
                 .total((int) result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListAllDTO> search(PageRequestDTO pageRequestDTO) {
+        return null;
     }
 }
 
