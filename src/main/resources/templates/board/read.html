@@ -54,6 +54,24 @@
                         </div>
                     </div>   <!-- my-4 -->
                 </div>   <!-- card-body -->
+
+                <!--        원본 이미지 보여주기-->
+                <!--        <div class="col">-->
+                <!--          <div class="card" th:if="${dto.fileNames != null && dto.fileNames.size() > 0}" >-->
+                <!--            <img class="card-img-top" -->
+                <!--                 th:each="fileName: ${dto.fileNames}"-->
+                <!--                 th:src="|/view/${fileName}|">-->
+                <!--          </div>-->
+                <!--        </div>-->
+                <!-- 원본 이미지 50%로 줄여서 가운데로 보여주기-->
+                <div class="col">
+                    <div class="card" th:if="${dto.fileNames != null && dto.fileNames.size() > 0}" style="text-align:center">
+                        <img class="card-img-top" style="width:50%;margin-left:auto;margin-right:auto"
+                             th:each="fileName: ${dto.fileNames}"
+                             th:src="|/view/${fileName}|">
+                    </div>
+                </div>
+
             </div>   <!-- card -->
         </div>   <!-- col -->
     </div>   <!-- row -->
@@ -281,7 +299,7 @@
         if(!target || target.tagName != 'SPAN')
             return;
 
-        const rno = target.getAttribute("data-rno");
+        const rno = target.getAttribute('data-rno');
 
         if(!rno)
             return;

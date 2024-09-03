@@ -39,7 +39,10 @@
 
                         <div class="my-4">
                             <div class="float-end">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <a th:href="@{/board/list}" class="text-decoration-none">
+                                    <button type="button" class="btn btn-primary">List</button>
+                                </a>
+                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
                                 <button type="reset" class="btn btn-secondary">Reset</button>
                             </div>
                         </div>
@@ -140,35 +143,95 @@
     // 이미지를 출력할 위치 요소 얻기
     const uploadResult = document.querySelector(".uploadResult");
 
-    function showUploadFile({uuid, fileName, link}){
+    function showUploadFile({uuid, fileName, link}) {
 
-        const str =`<div class="card col-4">
-                                <div class="card-header d-flex justify-content-center">
-                                    ${fileName}
-                                    <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
-                                </div>
-                                <div class="card-body">
-                                     <img src="/view/${link}" data-src="${uuid+"_"+fileName}" >
-                                </div>
-                            </div><!-- card -->`
+        const str = `<div class="card col-4">
+                        <div class="card-header d-flex justify-content-center">
+                            ${fileName}
+                            <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
+                        </div>
+                        <div class="card-body">
+                             <img src="/view/${link}" data-src="${uuid + "_" + fileName}" >
+                        </div>
+                    </div><!-- card -->`
 
         uploadResult.innerHTML += str
     }
 
+    // 파일 삭제하기
     function removeFile(uuid, fileName, obj) {
         console.log(uuid);
         console.log(fileName);
 
         console.log(obj);
 
+        //Element의 closest() 메서드는 주어진 CSS 선택자와 일치하는 요소를 찾을 때까지, 자기 자신을 포함해 위쪽(부모 방향, 문서 루트까지)으로 문서 트리를 순회합니다.
         const targetDiv = obj.closest(".card");
 
         removeFileToServer(uuid, fileName).then(data => {
             targetDiv.remove();
-        }).catch(e =>{
+        }).catch(e => {
             console.log(e);
         })
     }
+
+
+    // Submit버튼을 누르면 <form>에 fileNames라는 name으로 ${uuid}_${fileName}을 포함시킨다.
+    // 모든 파일이 <form>에 포함되면 서버로 전송한다.
+    document.querySelector(".submitBtn").addEventListener("click", function (e) {
+
+        // submit 버튼은 form에 등록된 method와 주소로 전송한다.
+        // 우리는 file정보를 추가로 등록해서 직접 보내야 하므로 일단 기본 동작을 막는다.
+        e.preventDefault();
+        e.stopPropagation();        // 이벤트 버블링 중지
+
+        // <input>에 name=fileNames로 value=${uuid}_${fileName}을 추가할 부모 요소
+        const target = document.querySelector(".uploadHidden");
+
+        // 모든 <img> 해당 하는 요소들을 배열로 가져와라
+        const uploadFiles = uploadResult.querySelectorAll("img");
+
+        let str = '';
+
+        for (let i = 0; i < uploadFiles.length; i++) {
+            const uploadFile = uploadFiles[i];
+
+            //imgLink = "${uuid+"_"+fileName}"
+            const imgLink = uploadFile.getAttribute("data-src");
+
+            str += `<input type='hidden' name='fileNames' value="${imgLink}">`;
+        }
+
+        target.innerHTML = str;
+
+        /*
+        <form action="/board/register" method="post">
+          .....
+          <input type="text" name="title" class="form-control" placeholder="Title">
+          .....
+          <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
+          .....
+          <input type="text" name="writer" class="form-control" placeholder="Writer">
+          .....
+           <div class="float-end uploadHidden">
+             <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+             <input type='hidden' name='fileNames' value="${imgLink}">
+             <input type='hidden' name='fileNames' value="${imgLink}">
+             <input type='hidden' name='fileNames' value="${imgLink}">
+             <input type='hidden' name='fileNames' value="${imgLink}">
+             <input type='hidden' name='fileNames' value="${imgLink}">
+              .....
+           </div>
+        </form>
+
+* */
+
+        const formObj = document.querySelector("form");
+
+        // <form action="/board/register" method="post">
+        formObj.submit();           // 직접 서버로 전송
+        formObj.reset();
+    }, false);
 
 </script>
 

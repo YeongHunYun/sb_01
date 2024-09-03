@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.suhodo.sb01.dto.BoardDTO;
-import org.suhodo.sb01.dto.BoardListReplyCountDTO;
-import org.suhodo.sb01.dto.PageRequestDTO;
-import org.suhodo.sb01.dto.PageResponseDTO;
+import org.suhodo.sb01.dto.*;
 import org.suhodo.sb01.service.BoardService;
 
 import javax.validation.Valid;
@@ -27,10 +24,12 @@ public class BoardController {
 
     // /board/list
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model) {
+    public void list(PageRequestDTO pageRequestDTO, Model model){
         //PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
 
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+        //PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+
+        PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
 
         log.info(responseDTO);
 
@@ -38,18 +37,18 @@ public class BoardController {
     }
 
     @GetMapping("/register")
-    public void registerGET() {
+    public void registerGET(){
 
     }
 
     @PostMapping("/register")
     public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes){
         log.info("board POST register.....");
 
         // @Valid처리를 통해 BoardDTO의 제약사항에 위배되면
         // 아래 에러가 발생한다.
-        if (bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors()){
             log.info("has errors..........");
             // redirect전송 시 처음 1번 "errors"값을 꺼내도록 전송한다.
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
@@ -65,7 +64,7 @@ public class BoardController {
     }
 
     @GetMapping({"/read", "/modify"})
-    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
+    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
         BoardDTO boardDTO = boardService.readOne(bno);
 
         log.info(boardDTO);
@@ -76,10 +75,10 @@ public class BoardController {
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,
                          @Valid BoardDTO boardDTO,
-                         BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+                         BindingResult bindingResult, RedirectAttributes redirectAttributes){
         log.info("board modify post............." + boardDTO);
 
-        if (bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors()){
             log.info("has errors.............");
 
             String link = pageRequestDTO.getLink();
@@ -101,7 +100,7 @@ public class BoardController {
     }
 
     @PostMapping("/remove")
-    public String remove(Long bno, RedirectAttributes redirectAttributes) {
+    public String remove(Long bno, RedirectAttributes redirectAttributes){
         log.info("remove post..." + bno);
 
         boardService.remove(bno);
@@ -111,3 +110,16 @@ public class BoardController {
         return "redirect:/board/list";
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
